@@ -18,12 +18,17 @@ source ~/.bashrc
 if ! command -v forge &> /dev/null
 then
     echo "forge komutu bulunamadı. Lütfen Foundry'nin yüklenip yüklenmediğini kontrol edin."
+    echo "Lütfen 'foundryup' komutunu çalıştırarak Foundry'yi yükleyin."
     exit 1
 fi
 
 echo "Foundry güncellendi ve PATH'e eklendi."
 
-echo "Hardhat'i yükliyoruz..."
+# Foundry'nin yüklendiğini doğrula
+echo "Foundry versiyonunu kontrol ediyoruz..."
+forge --version
+
+echo "Hardhat'i yüklüyoruz..."
 npm install --save-dev hardhat
 
 # 3. Bağımlılıkları Yükle
