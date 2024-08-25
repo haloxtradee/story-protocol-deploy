@@ -1,9 +1,25 @@
+#!/bin/bash
+
 # 2. Foundry ve Hardhat Kurulumu
 echo "Foundry'yi yüklüyoruz..."
 curl -L https://foundry.paradigm.xyz | bash
 
 # PATH ayarlarını güncelle
+echo 'export PATH="$HOME/.foundry/bin:$PATH"' >> ~/.bashrc
+# veya zsh kullanıyorsanız
+# echo 'export PATH="$HOME/.foundry/bin:$PATH"' >> ~/.zshrc
+
+# .bashrc veya .zshrc dosyasını yeniden yükle
 source ~/.bashrc
+# veya zsh kullanıyorsanız
+# source ~/.zshrc
+
+# Foundry'nin kurulduğunu kontrol et
+if ! command -v forge &> /dev/null
+then
+    echo "forge komutu bulunamadı. Lütfen Foundry'nin yüklenip yüklenmediğini kontrol edin."
+    exit 1
+fi
 
 echo "Foundry güncellendi ve PATH'e eklendi."
 
@@ -29,23 +45,11 @@ echo "STORY_PRIVATEKEY=$PRIVATEKEY" >> .env
 
 # 5. Sözleşmeleri Derle
 echo "Sözleşmeleri derliyoruz..."
-if command -v forge &> /dev/null
-then
-    forge build
-else
-    echo "forge komutu bulunamadı. Foundry kurulumu veya PATH ayarlarını kontrol edin."
-    exit 1
-fi
+forge build
 
 # 6. Deploy Scriptini Çalıştır
 echo "Deploy işlemini başlatıyoruz..."
-if command -v forge &> /dev/null
-then
-    forge script script/deploy.s.sol:DeployScript --rpc-url $STORY_TESTNET_URL --private-key $PRIVATEKEY --broadcast
-else
-    echo "forge komutu bulunamadı. Foundry kurulumu veya PATH ayarlarını kontrol edin."
-    exit 1
-fi
+forge script script/deploy.s.sol:DeployScript --rpc-url $STORY_TESTNET_URL --private-key $PRIVATEKEY --broadcast
 
 echo "Deploy işlemi tamamlandı. Kontrol edebilirsiniz."
 
