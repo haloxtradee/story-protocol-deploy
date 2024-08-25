@@ -1,16 +1,9 @@
-#!/bin/bash
-
-# 1. Repo'yu Klonla
-echo "Repo'yu klonluyoruz..."
-git clone https://github.com/haloxtradee/story-protocol-deploy.git
-cd story-protocol-deploy
-
 # 2. Foundry ve Hardhat Kurulumu
 echo "Foundry'yi yüklüyoruz..."
 curl -L https://foundry.paradigm.xyz | bash
 
-# .bashrc dosyasını yeniden yükle
-source /home/codespace/.bashrc
+# PATH ayarlarını güncelle
+source ~/.bashrc
 
 echo "Foundry güncellendi ve PATH'e eklendi."
 
@@ -36,11 +29,23 @@ echo "STORY_PRIVATEKEY=$PRIVATEKEY" >> .env
 
 # 5. Sözleşmeleri Derle
 echo "Sözleşmeleri derliyoruz..."
-forge build
+if command -v forge &> /dev/null
+then
+    forge build
+else
+    echo "forge komutu bulunamadı. Foundry kurulumu veya PATH ayarlarını kontrol edin."
+    exit 1
+fi
 
 # 6. Deploy Scriptini Çalıştır
 echo "Deploy işlemini başlatıyoruz..."
-forge script script/deploy.s.sol:DeployScript --rpc-url $STORY_TESTNET_URL --private-key $PRIVATEKEY --broadcast
+if command -v forge &> /dev/null
+then
+    forge script script/deploy.s.sol:DeployScript --rpc-url $STORY_TESTNET_URL --private-key $PRIVATEKEY --broadcast
+else
+    echo "forge komutu bulunamadı. Foundry kurulumu veya PATH ayarlarını kontrol edin."
+    exit 1
+fi
 
 echo "Deploy işlemi tamamlandı. Kontrol edebilirsiniz."
 
