@@ -8,7 +8,11 @@ cd story-protocol-deploy
 # 2. Foundry ve Hardhat Kurulumu
 echo "Foundry'yi yüklüyoruz..."
 curl -L https://foundry.paradigm.xyz | bash
-foundryup
+
+# .bashrc dosyasını yeniden yükle
+source /home/codespace/.bashrc
+
+echo "Foundry güncellendi ve PATH'e eklendi."
 
 echo "Hardhat'i yükliyoruz..."
 npm install --save-dev hardhat
@@ -21,14 +25,13 @@ echo "Foundry paketlerini yüklüyoruz..."
 forge install
 
 # 4. Çevresel Değişkenleri Ayarla
-echo "Lütfen STORY_TESTNET_URL'i girin:"
-read -r TESTNET_URL
+# STORY_TESTNET_URL'i otomatik olarak ayarla
+echo "STORY_TESTNET_URL=https://rpc.partner.testnet.storyprotocol.net/" > .env
 
 echo "Lütfen STORY_PRIVATEKEY'i girin:"
 read -s PRIVATEKEY
 
 # .env dosyasını oluştur veya güncelle
-echo "STORY_TESTNET_URL=$TESTNET_URL" > .env
 echo "STORY_PRIVATEKEY=$PRIVATEKEY" >> .env
 
 # 5. Sözleşmeleri Derle
@@ -37,7 +40,7 @@ forge build
 
 # 6. Deploy Scriptini Çalıştır
 echo "Deploy işlemini başlatıyoruz..."
-forge script script/deploy.s.sol:DeployScript --rpc-url $TESTNET_URL --private-key $PRIVATEKEY --broadcast
+forge script script/deploy.s.sol:DeployScript --rpc-url $STORY_TESTNET_URL --private-key $PRIVATEKEY --broadcast
 
 echo "Deploy işlemi tamamlandı. Kontrol edebilirsiniz."
 
