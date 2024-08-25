@@ -1,0 +1,7 @@
+{
+  "transactions": [
+    {
+      "rpc": "https://rpc.partner.testnet.storyprotocol.net/"
+    }
+  ]
+}
